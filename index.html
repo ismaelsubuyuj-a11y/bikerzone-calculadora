@@ -7,7 +7,7 @@
 
 <style>
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background: #0f0f0f;
     color: white;
     padding: 20px;
@@ -30,35 +30,42 @@ input, select, button {
     margin-top: 10px;
     border-radius: 8px;
     border: none;
-    font-size: 16px;
 }
 
-input, select {
-    background: #2c2c2c;
-    color: white;
-}
+button { background: gold; }
 
-button {
-    background: gold;
-    font-weight: bold;
-}
+.whatsapp { background: #25D366; color: white; }
+.pdf { background: #2196F3; color: white; }
 
-.whatsapp {
-    background: #25D366;
-    color: white;
-}
+.cuota { font-size: 24px; color: gold; }
 
-.cuota {
-    font-size: 24px;
-    color: gold;
+/* 🧾 ESTILO TICKET */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .container {
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    button, select, input {
+        display: none;
+    }
+
+    img {
+        width: 120px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-    <img src="logo.png" alt="Logo">
+<div class="container" id="ticket">
+    <img src="logo.png">
 
     <h2>Calcula tu compra</h2>
 
@@ -85,7 +92,11 @@ button {
     </div>
 
     <button class="whatsapp" id="btnWhats" style="display:none;">
-        Enviar por WhatsApp
+        WhatsApp
+    </button>
+
+    <button class="pdf" id="btnPDF" style="display:none;">
+        Imprimir / PDF
     </button>
 </div>
 
@@ -97,7 +108,7 @@ const recargos = {
 
 let mensaje = "";
 
-// BOTÓN CALCULAR
+// CALCULAR
 document.getElementById("btnCalcular").addEventListener("click", function(){
 
     const monto = parseFloat(document.getElementById("monto").value);
@@ -113,6 +124,7 @@ document.getElementById("btnCalcular").addEventListener("click", function(){
 
     document.getElementById("resultado").style.display = "block";
     document.getElementById("btnWhats").style.display = "block";
+    document.getElementById("btnPDF").style.display = "block";
 
     const textoCuota = cuotas + " cuotas de Q" + cuota.toFixed(2);
     const textoTotal = "Total: Q" + total.toFixed(2);
@@ -123,9 +135,14 @@ document.getElementById("btnCalcular").addEventListener("click", function(){
     mensaje = "Hola 👋\n" + textoCuota + "\n" + textoTotal + "\nBiker Zone 🏍️";
 });
 
-// BOTÓN WHATSAPP
+// WHATSAPP
 document.getElementById("btnWhats").addEventListener("click", function(){
     window.open("https://wa.me/?text=" + encodeURIComponent(mensaje));
+});
+
+// PDF / IMPRIMIR
+document.getElementById("btnPDF").addEventListener("click", function(){
+    window.print();
 });
 </script>
 
