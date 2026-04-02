@@ -20,13 +20,9 @@ body {
     padding: 20px;
     border-radius: 15px;
     text-align: center;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
 
-img {
-    width: 150px;
-    margin-bottom: 10px;
-}
+img { width: 150px; }
 
 input, select, button {
     width: 100%;
@@ -34,7 +30,6 @@ input, select, button {
     margin-top: 10px;
     border-radius: 8px;
     border: none;
-    font-size: 16px;
 }
 
 input, select {
@@ -44,7 +39,6 @@ input, select {
 
 button {
     background: gold;
-    color: black;
     font-weight: bold;
 }
 
@@ -55,30 +49,20 @@ button {
 
 .cuota {
     font-size: 26px;
-    font-weight: bold;
     color: gold;
 }
 
-.total {
-    margin-top: 5px;
-}
-
-.historial {
-    margin-top: 20px;
-    font-size: 14px;
-    text-align: left;
-}
 </style>
 </head>
 
 <body>
 
 <div class="container">
-    <img src="logo.png" alt="Logo">
+    <img src="logo.png">
 
     <h2>Calcula tu compra</h2>
 
-    <input type="number" id="monto" placeholder="Ingrese el monto (Q)">
+    <input type="number" id="monto" placeholder="Monto (Q)">
 
     <select id="cuotas">
         <option value="2">2 cuotas</option>
@@ -93,19 +77,16 @@ button {
         <option value="48">48 cuotas</option>
     </select>
 
-    <button onclick="calcular()">Calcular</button>
+    <button id="btnCalcular">Calcular</button>
 
     <div id="resultado" style="display:none;">
         <div class="cuota" id="cuota"></div>
-        <div class="total" id="total"></div>
-        <div id="desde"></div>
+        <div id="total"></div>
     </div>
 
-    <button class="whatsapp" onclick="enviarWhatsApp()" id="btnWhats" style="display:none;">
-        Enviar por WhatsApp
+    <button class="whatsapp" id="btnWhats" style="display:none;">
+        WhatsApp
     </button>
-
-    <div class="historial" id="historial"></div>
 </div>
 
 <script>
@@ -115,70 +96,42 @@ const recargos = {
 };
 
 let mensaje = "";
-let admin = false;
 
-function formatoQ(num){
-    return "Q" + num.toLocaleString("es-GT",{minimumFractionDigits:2});
-}
+// Esperar a que cargue TODO
+document.addEventListener("DOMContentLoaded", function(){
 
-function calcular(){
-    const monto = parseFloat(document.getElementById("monto").value);
-    const cuotas = parseInt(document.getElementById("cuotas").value);
+    const btn = document.getElementById("btnCalcular");
+    const btnW = document.getElementById("btnWhats");
 
-    if(isNaN(monto)){
-        alert("Ingrese un monto válido");
-        return;
-    }
+    btn.addEventListener("click", function(){
 
-    const total = monto + (monto * recargos[cuotas]);
-    const cuota = total / cuotas;
+        const monto = parseFloat(document.getElementById("monto").value);
+        const cuotas = parseInt(document.getElementById("cuotas").value);
 
-    document.getElementById("resultado").style.display = "block";
-    document.getElementById("btnWhats").style.display = "block";
+        if(isNaN(monto)){
+            alert("Ingrese monto válido");
+            return;
+        }
 
-    const textoCuota = ${cuotas} cuotas de ${formatoQ(cuota)};
-    const textoTotal = Total: ${formatoQ(total)};
+        const total = monto + (monto * recargos[cuotas]);
+        const cuota = total / cuotas;
 
-    document.getElementById("cuota").innerText = textoCuota;
-    document.getElementById("total").innerText = textoTotal;
-    document.getElementById("desde").innerText = Desde ${formatoQ(cuota)} al mes;
+        document.getElementById("resultado").style.display = "block";
+        btnW.style.display = "block";
 
-    mensaje = Hola 👋\n\n💳 ${textoCuota}\n💰 ${textoTotal}\n\nBiker Zone 🏍️;
+        const textoCuota = ${cuotas} cuotas de Q${cuota.toFixed(2)};
+        const textoTotal = Total: Q${total.toFixed(2)};
 
-    guardarHistorial(textoCuota, textoTotal);
+        document.getElementById("cuota").innerText = textoCuota;
+        document.getElementById("total").innerText = textoTotal;
 
-    if(admin){
-        const recargoQ = monto * recargos[cuotas];
-        document.getElementById("resultado").innerHTML += <br>📊 Recargo: ${formatoQ(recargoQ)};
-    }
-}
+        mensaje = Hola 👋\n${textoCuota}\n${textoTotal}\nBiker Zone 🏍️;
+    });
 
-function enviarWhatsApp(){
-    window.open("https://wa.me/?text=" + encodeURIComponent(mensaje));
-}
+    btnW.addEventListener("click", function(){
+        window.open("https://wa.me/?text=" + encodeURIComponent(mensaje));
+    });
 
-function guardarHistorial(cuota, total){
-    let data = JSON.parse(localStorage.getItem("historial") || "[]");
-    data.unshift(${cuota} | ${total});
-    localStorage.setItem("historial", JSON.stringify(data));
-    mostrarHistorial();
-}
-
-function mostrarHistorial(){
-    let data = JSON.parse(localStorage.getItem("historial") || "[]");
-    document.getElementById("historial").innerHTML =
-        "<b>Historial:</b><br>" + data.slice(0,5).join("<br>");
-}
-
-mostrarHistorial();
-
-// Modo admin oculto
-document.querySelector("img").addEventListener("dblclick", function(){
-    const pass = prompt("Contraseña admin:");
-    if(pass === "1234"){
-        admin = true;
-        alert("Modo admin activado");
-    }
 });
 </script>
 
