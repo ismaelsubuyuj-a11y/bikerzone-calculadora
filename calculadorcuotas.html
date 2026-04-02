@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biker Zone - Calculadora</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0f0f0f;
+        color: white;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 400px;
+        margin: auto;
+        background: #1c1c1c;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        text-align: center;
+    }
+
+    img {
+        width: 180px;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        margin-bottom: 15px;
+    }
+
+    input, select, button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+    }
+
+    input, select {
+        background: #2c2c2c;
+        color: white;
+    }
+
+    button {
+        background: gold;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #ffd700cc;
+    }
+
+    .resultado {
+        margin-top: 20px;
+        text-align: left;
+        background: #2c2c2c;
+        padding: 15px;
+        border-radius: 10px;
+        white-space: pre-line;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <img src="logo.png" alt="Biker Zone Logo">
+
+    <h2>Calculadora de Cuotas</h2>
+
+    <input type="number" id="monto" placeholder="Ingrese el monto (Q)">
+
+    <select id="cuotas">
+        <option value="2">2 cuotas (14%)</option>
+        <option value="3">3 cuotas (15%)</option>
+        <option value="6">6 cuotas (16%)</option>
+        <option value="10">10 cuotas (18%)</option>
+        <option value="12">12 cuotas (19%)</option>
+        <option value="15">15 cuotas (20%)</option>
+        <option value="18">18 cuotas (22%)</option>
+        <option value="24">24 cuotas (24%)</option>
+        <option value="36">36 cuotas (26%)</option>
+        <option value="48">48 cuotas (27%)</option>
+    </select>
+
+    <button onclick="calcular()">Calcular</button>
+
+    <div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+function formatoQ(num) {
+    return "Q" + num.toLocaleString("es-GT", {minimumFractionDigits: 2});
+}
+
+function calcular() {
+    const monto = parseFloat(document.getElementById("monto").value);
+    const cuotas = parseInt(document.getElementById("cuotas").value);
+
+    const recargos = {
+        2: 0.14,
+        3: 0.15,
+        6: 0.16,
+        10: 0.18,
+        12: 0.19,
+        15: 0.20,
+        18: 0.22,
+        24: 0.24,
+        36: 0.26,
+        48: 0.27
+    };
+
+    if (isNaN(monto)) {
+        document.getElementById("resultado").innerText = "Ingrese un monto válido";
+        return;
+    }
+
+    const recargo = recargos[cuotas];
+    const recargoQ = monto * recargo;
+    const total = monto + recargoQ;
+    const cuota = total / cuotas;
+
+    document.getElementById("resultado").innerText =
+        `💰 Monto original: ${formatoQ(monto)}
+📈 Recargo (${(recargo * 100).toFixed(0)}%): ${formatoQ(recargoQ)}
+💳 Total a pagar: ${formatoQ(total)}
+📅 Cuotas (${cuotas}): ${formatoQ(cuota)}`;
+}
+</script>
+
+</body>
+</html>
