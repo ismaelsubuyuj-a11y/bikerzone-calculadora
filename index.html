@@ -3,137 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Biker Zone - Calculadora</title>
+<title>Biker Zone</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #0f0f0f;
-        color: white;
-        margin: 0;
-        padding: 20px;
-    }
+body {
+    font-family: Arial;
+    background: #0f0f0f;
+    color: white;
+    padding: 20px;
+}
 
-    .container {
-        max-width: 400px;
-        margin: auto;
-        background: #1c1c1c;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-        text-align: center;
-    }
+.container {
+    max-width: 400px;
+    margin: auto;
+    background: #1c1c1c;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
 
-    img {
-        width: 180px;
-        margin-bottom: 10px;
-    }
+img { width: 150px; }
 
-    h2 {
-        margin-bottom: 15px;
-    }
+input, select, button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: none;
+}
 
-    input, select, button {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        border-radius: 8px;
-        border: none;
-        font-size: 16px;
-    }
+button { background: gold; }
 
-    input, select {
-        background: #2c2c2c;
-        color: white;
-    }
+.whatsapp { background: #25D366; color: white; }
 
-    button {
-        background: gold;
-        color: black;
-        font-weight: bold;
-        cursor: pointer;
-    }
+.cuota { font-size: 26px; color: gold; }
 
-    button:hover {
-        background: #ffd700cc;
-    }
-
-    .resultado {
-        margin-top: 20px;
-        text-align: left;
-        background: #2c2c2c;
-        padding: 15px;
-        border-radius: 10px;
-        white-space: pre-line;
-    }
+.historial {
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: left;
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
-    <img src="logo.png" alt="Biker Zone Logo">
+    <img src="logo.png">
 
-    <h2>Calculadora de Cuotas</h2>
+    <h2>Calcula tu compra</h2>
 
-    <input type="number" id="monto" placeholder="Ingrese el monto (Q)">
+    <input type="number" id="monto" placeholder="Monto (Q)">
 
     <select id="cuotas">
-        <option value="2">2 cuotas (14%)</option>
-        <option value="3">3 cuotas (15%)</option>
-        <option value="6">6 cuotas (16%)</option>
-        <option value="10">10 cuotas (18%)</option>
-        <option value="12">12 cuotas (19%)</option>
-        <option value="15">15 cuotas (20%)</option>
-        <option value="18">18 cuotas (22%)</option>
-        <option value="24">24 cuotas (24%)</option>
-        <option value="36">36 cuotas (26%)</option>
-        <option value="48">48 cuotas (27%)</option>
+        <option value="2">2 cuotas</option>
+        <option value="3">3 cuotas</option>
+        <option value="6">6 cuotas</option>
+        <option value="10">10 cuotas</option>
+        <option value="12">12 cuotas</option>
+        <option value="15">15 cuotas</option>
+        <option value="18">18 cuotas</option>
+        <option value="24">24 cuotas</option>
+        <option value="36">36 cuotas</option>
+        <option value="48">48 cuotas</option>
     </select>
 
     <button onclick="calcular()">Calcular</button>
 
-    <div class="resultado" id="resultado"></div>
+    <div id="resultado" style="display:none;">
+        <div class="cuota" id="cuota"></div>
+        <div id="total"></div>
+        <div id="desde"></div>
+    </div>
+
+    <button class="whatsapp" onclick="whatsapp()" id="btnW" style="display:none;">
+        Enviar por WhatsApp
+    </button>
+
+    <div class="historial" id="historial"></div>
 </div>
 
 <script>
-function formatoQ(num) {
-    return "Q" + num.toLocaleString("es-GT", {minimumFractionDigits: 2});
-}
+const recargos = {
+    2:0.14,3:0.15,6:0.16,10:0.18,12:0.19,
+    15:0.20,18:0.22,24:0.24,36:0.26,48:0.27
+};
 
-function calcular() {
-    const monto = parseFloat(document.getElementById("monto").value);
-    const cuotas = parseInt(document.getElementById("cuotas").value);
+let mensaje = "";
+let admin = false;
 
-    const recargos = {
-        2: 0.14,
-        3: 0.15,
-        6: 0.16,
-        10: 0.18,
-        12: 0.19,
-        15: 0.20,
-        18: 0.22,
-        24: 0.24,
-        36: 0.26,
-        48: 0.27
-    };
+function Q(n){ return "Q"+n.toLocaleString("es-GT",{minimumFractionDigits:2}); }
 
-    if (isNaN(monto)) {
-        document.getElementById("resultado").innerText = "Ingrese un monto válido";
-        return;
+function calcular(){
+    let m = parseFloat(monto.value);
+    let c = parseInt(cuotas.value);
+
+    if(isNaN(m)) return alert("Ingrese monto");
+
+    let total = m + (m * recargos[c]);
+    let cuota = total / c;
+
+    resultado.style.display="block";
+    btnW.style.display="block";
+
+    cuotaTexto = ${c} cuotas de ${Q(cuota)};
+    cuota.innerText = cuotaTexto;
+    totalTexto = Total: ${Q(total)};
+    total.innerText = totalTexto;
+
+    // Desde automático
+    desde.innerText = Desde ${Q(cuota)} al mes;
+
+    // Mensaje WhatsApp
+    mensaje = Hola 👋\n\n💳 ${cuotaTexto}\n💰 ${totalTexto}\n\nBiker Zone 🏍️;
+
+    guardarHistorial(cuotaTexto, totalTexto);
+
+    if(admin){
+        let recargoQ = m * recargos[c];
+        resultado.innerHTML += <br>📊 Recargo: ${Q(recargoQ)};
     }
-
-    const recargo = recargos[cuotas];
-    const recargoQ = monto * recargo;
-    const total = monto + recargoQ;
-    const cuota = total / cuotas;
-
-    document.getElementById("resultado").innerText =
-        `💰 Monto original: ${formatoQ(monto)}
-📈 Recargo (${(recargo * 100).toFixed(0)}%): ${formatoQ(recargoQ)}
-💳 Total a pagar: ${formatoQ(total)}
-📅 Cuotas (${cuotas}): ${formatoQ(cuota)}`;
 }
+
+function whatsapp(){
+    window.open("https://wa.me/?text="+encodeURIComponent(mensaje));
+}
+
+// HISTORIAL LOCAL
+function guardarHistorial(cuota,total){
+    let data = JSON.parse(localStorage.getItem("historial")||"[]");
+    data.unshift(${cuota} | ${total});
+    localStorage.setItem("historial",JSON.stringify(data));
+    mostrarHistorial();
+}
+
+function mostrarHistorial(){
+    let data = JSON.parse(localStorage.getItem("historial")||"[]");
+    historial.innerHTML = "<b>Historial:</b><br>" + data.slice(0,5).join("<br>");
+}
+mostrarHistorial();
+
+// MODO ADMIN OCULTO (doble toque logo)
+document.querySelector("img").addEventListener("dblclick",()=>{
+    let pass = prompt("Contraseña admin:");
+    if(pass==="1234"){
+        admin = true;
+        alert("Modo admin activado");
+    }
+});
 </script>
 
 </body>
