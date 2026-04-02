@@ -30,6 +30,7 @@ input, select, button {
     margin-top: 10px;
     border-radius: 8px;
     border: none;
+    font-size: 16px;
 }
 
 input, select {
@@ -48,17 +49,16 @@ button {
 }
 
 .cuota {
-    font-size: 26px;
+    font-size: 24px;
     color: gold;
 }
-
 </style>
 </head>
 
 <body>
 
 <div class="container">
-    <img src="logo.png">
+    <img src="logo.png" alt="Logo">
 
     <h2>Calcula tu compra</h2>
 
@@ -85,7 +85,7 @@ button {
     </div>
 
     <button class="whatsapp" id="btnWhats" style="display:none;">
-        WhatsApp
+        Enviar por WhatsApp
     </button>
 </div>
 
@@ -97,41 +97,35 @@ const recargos = {
 
 let mensaje = "";
 
-// Esperar a que cargue TODO
-document.addEventListener("DOMContentLoaded", function(){
+// BOTÓN CALCULAR
+document.getElementById("btnCalcular").addEventListener("click", function(){
 
-    const btn = document.getElementById("btnCalcular");
-    const btnW = document.getElementById("btnWhats");
+    const monto = parseFloat(document.getElementById("monto").value);
+    const cuotas = parseInt(document.getElementById("cuotas").value);
 
-    btn.addEventListener("click", function(){
+    if(isNaN(monto)){
+        alert("Ingrese monto válido");
+        return;
+    }
 
-        const monto = parseFloat(document.getElementById("monto").value);
-        const cuotas = parseInt(document.getElementById("cuotas").value);
+    const total = monto + (monto * recargos[cuotas]);
+    const cuota = total / cuotas;
 
-        if(isNaN(monto)){
-            alert("Ingrese monto válido");
-            return;
-        }
+    document.getElementById("resultado").style.display = "block";
+    document.getElementById("btnWhats").style.display = "block";
 
-        const total = monto + (monto * recargos[cuotas]);
-        const cuota = total / cuotas;
+    const textoCuota = cuotas + " cuotas de Q" + cuota.toFixed(2);
+    const textoTotal = "Total: Q" + total.toFixed(2);
 
-        document.getElementById("resultado").style.display = "block";
-        btnW.style.display = "block";
+    document.getElementById("cuota").innerText = textoCuota;
+    document.getElementById("total").innerText = textoTotal;
 
-        const textoCuota = ${cuotas} cuotas de Q${cuota.toFixed(2)};
-        const textoTotal = Total: Q${total.toFixed(2)};
+    mensaje = "Hola 👋\n" + textoCuota + "\n" + textoTotal + "\nBiker Zone 🏍️";
+});
 
-        document.getElementById("cuota").innerText = textoCuota;
-        document.getElementById("total").innerText = textoTotal;
-
-        mensaje = Hola 👋\n${textoCuota}\n${textoTotal}\nBiker Zone 🏍️;
-    });
-
-    btnW.addEventListener("click", function(){
-        window.open("https://wa.me/?text=" + encodeURIComponent(mensaje));
-    });
-
+// BOTÓN WHATSAPP
+document.getElementById("btnWhats").addEventListener("click", function(){
+    window.open("https://wa.me/?text=" + encodeURIComponent(mensaje));
 });
 </script>
 
