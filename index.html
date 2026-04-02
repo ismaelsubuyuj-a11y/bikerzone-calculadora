@@ -3,147 +3,240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Biker Zone</title>
+<title>Biker Zone PRO</title>
 
 <style>
 body {
     font-family: Arial;
-    background: #0f0f0f;
-    color: white;
-    padding: 20px;
+    background:#0f0f0f;
+    color:white;
+    margin:0;
 }
 
-.container {
-    max-width: 400px;
-    margin: auto;
-    background: #1c1c1c;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
+/* HEADER */
+.header {
+    text-align:center;
+    padding:30px 20px 10px;
 }
 
-img { width: 150px; }
+.header img {
+    width:180px;
+}
+
+.frase {
+    font-size:14px;
+    color:gold;
+    margin-top:10px;
+    font-style:italic;
+}
+
+/* CATÁLOGO */
+.catalogo {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:15px;
+}
+
+.moto {
+    background:#1c1c1c;
+    border-radius:10px;
+    cursor:pointer;
+    overflow:hidden;
+}
+
+.moto img {
+    width:100%;
+    height:120px;
+    object-fit:cover;
+}
+
+.moto p {
+    margin:5px;
+    font-size:14px;
+    color:gold;
+}
+
+/* COTIZADOR */
+.cotizador {
+    background:#1c1c1c;
+    margin:15px;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(255,215,0,0.2);
+}
 
 input, select, button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border: none;
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:10px;
+    border:none;
 }
 
-button { background: gold; }
+#monto {
+    text-align:center;
+    font-size:18px;
+}
 
-.whatsapp { background: #25D366; color: white; }
-.pdf { background: #2196F3; color: white; }
+button {
+    background:gold;
+    font-weight:bold;
+}
 
-.cuota { font-size: 24px; color: gold; }
+.cuota {
+    font-size:22px;
+    color:gold;
+    margin-top:15px;
+}
 
-/* 🧾 ESTILO TICKET */
-@media print {
-    body {
-        background: white;
-        color: black;
-    }
+/* MODAL */
+#modalMoto {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    text-align:center;
+    z-index:1000;
+}
 
-    .container {
-        box-shadow: none;
-        border-radius: 0;
-    }
-
-    button, select, input {
-        display: none;
-    }
-
-    img {
-        width: 120px;
-    }
+.mini {
+    width:80px;
+    margin:5px;
+    cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container" id="ticket">
+<!-- 🔥 HEADER -->
+<div class="header">
     <img src="logo.png">
-
-    <h2>Calcula tu compra</h2>
-
-    <input type="number" id="monto" placeholder="Monto (Q)">
-
-    <select id="cuotas">
-        <option value="2">2 cuotas</option>
-        <option value="3">3 cuotas</option>
-        <option value="6">6 cuotas</option>
-        <option value="10">10 cuotas</option>
-        <option value="12">12 cuotas</option>
-        <option value="15">15 cuotas</option>
-        <option value="18">18 cuotas</option>
-        <option value="24">24 cuotas</option>
-        <option value="36">36 cuotas</option>
-        <option value="48">48 cuotas</option>
-    </select>
-
-    <button id="btnCalcular">Calcular</button>
-
-    <div id="resultado" style="display:none;">
-        <div class="cuota" id="cuota"></div>
-        <div id="total"></div>
+    <div class="frase">
+        "No vendemos motos… entregamos libertad sobre ruedas 🏍️🔥"
     </div>
+</div>
 
-    <button class="whatsapp" id="btnWhats" style="display:none;">
-        WhatsApp
-    </button>
+<!-- 🏍️ CATÁLOGO -->
+<div class="catalogo">
 
-    <button class="pdf" id="btnPDF" style="display:none;">
-        Imprimir / PDF
-    </button>
+<div class="moto" onclick="abrirMoto('MT07 2016',48000,'mt1.jpg','mt2.jpg','mt3.jpg')">
+<img src="mt1.jpg">
+<p>MT07 2016 - Q48,000</p>
+</div>
+
+<div class="moto" onclick="abrirMoto('MT07 2019',54500,'mt4.jpg','mt5.jpg','mt6.jpg')">
+<img src="mt4.jpg">
+<p>MT07 2019 - Q54,500</p>
+</div>
+
+<div class="moto" onclick="abrirMoto('Kawasaki EX400 2023',39500,'k1.jpg','k2.jpg','k3.jpg')">
+<img src="k1.jpg">
+<p>Kawasaki EX400 2023 - Q39,500</p>
+</div>
+
+<div class="moto" onclick="abrirMoto('Boxer BM150 2026',7949,'b1.jpg','b2.jpg','b3.jpg')">
+<img src="b1.jpg">
+<p>Boxer BM150 2026 - Q7,949</p>
+</div>
+
+</div>
+
+<!-- 💰 COTIZADOR -->
+<div class="cotizador">
+
+<h2>Calcula tu compra</h2>
+
+<input type="text" id="modelo" placeholder="Modelo" readonly>
+<input type="number" id="monto" placeholder="Monto (Q)">
+
+<select id="cuotas">
+<option value="2">2 cuotas</option>
+<option value="3">3 cuotas</option>
+<option value="6">6 cuotas</option>
+<option value="10">10 cuotas</option>
+<option value="12">12 cuotas</option>
+<option value="15">15 cuotas</option>
+<option value="18">18 cuotas</option>
+<option value="24">24 cuotas</option>
+<option value="36">36 cuotas</option>
+<option value="48">48 cuotas</option>
+</select>
+
+<button onclick="calcular()">Calcular</button>
+
+<div id="resultado" style="display:none;">
+<div class="cuota" id="cuota"></div>
+<div id="total"></div>
+</div>
+
+</div>
+
+<!-- 🖼️ MODAL -->
+<div id="modalMoto">
+
+<img id="imgPrincipal" width="90%" style="margin-top:40px;">
+
+<br><br>
+
+<img id="mini1" class="mini">
+<img id="mini2" class="mini">
+<img id="mini3" class="mini">
+
+<br><br>
+
+<button onclick="cerrarMoto()">Cerrar</button>
+
 </div>
 
 <script>
 const recargos = {
-    2:0.14,3:0.15,6:0.16,10:0.18,12:0.19,
-    15:0.20,18:0.22,24:0.24,36:0.26,48:0.27
+2:0.14,3:0.15,6:0.16,10:0.18,12:0.19,
+15:0.20,18:0.22,24:0.24,36:0.26,48:0.27
 };
 
-let mensaje = "";
+function abrirMoto(nombre, precio, img1, img2, img3){
 
-// CALCULAR
-document.getElementById("btnCalcular").addEventListener("click", function(){
+document.getElementById("modalMoto").style.display="block";
 
-    const monto = parseFloat(document.getElementById("monto").value);
-    const cuotas = parseInt(document.getElementById("cuotas").value);
+imgPrincipal.src=img1;
+mini1.src=img1;
+mini2.src=img2;
+mini3.src=img3;
 
-    if(isNaN(monto)){
-        alert("Ingrese monto válido");
-        return;
-    }
+mini1.onclick=()=>imgPrincipal.src=img1;
+mini2.onclick=()=>imgPrincipal.src=img2;
+mini3.onclick=()=>imgPrincipal.src=img3;
 
-    const total = monto + (monto * recargos[cuotas]);
-    const cuota = total / cuotas;
+document.getElementById("modelo").value=nombre;
+document.getElementById("monto").value=precio;
+}
 
-    document.getElementById("resultado").style.display = "block";
-    document.getElementById("btnWhats").style.display = "block";
-    document.getElementById("btnPDF").style.display = "block";
+function cerrarMoto(){
+document.getElementById("modalMoto").style.display="none";
+}
 
-    const textoCuota = cuotas + " cuotas de Q" + cuota.toFixed(2);
-    const textoTotal = "Total: Q" + total.toFixed(2);
+function calcular(){
+let monto=parseFloat(document.getElementById("monto").value);
+let cuotas=parseInt(document.getElementById("cuotas").value);
 
-    document.getElementById("cuota").innerText = textoCuota;
-    document.getElementById("total").innerText = textoTotal;
+if(isNaN(monto)){ alert("Ingrese monto"); return; }
 
-    mensaje = "Hola 👋\n" + textoCuota + "\n" + textoTotal + "\nBiker Zone 🏍️";
-});
+let total=monto+(monto*recargos[cuotas]);
+let cuota=total/cuotas;
 
-// WHATSAPP
-document.getElementById("btnWhats").addEventListener("click", function(){
-    window.open("https://wa.me/?text=" + encodeURIComponent(mensaje));
-});
+document.getElementById("resultado").style.display="block";
 
-// PDF / IMPRIMIR
-document.getElementById("btnPDF").addEventListener("click", function(){
-    window.print();
-});
+document.getElementById("cuota").innerText =
+cuotas+" cuotas de Q"+cuota.toFixed(2);
+
+document.getElementById("total").innerText =
+"Total: Q"+total.toFixed(2);
+}
 </script>
 
 </body>
