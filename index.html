@@ -125,6 +125,29 @@ button:disabled {
     margin-top:15px;
 }
 
+/* TITULOS ANIMADOS */
+.titulo-animado {
+    text-align: center;
+    animation: brillo 2s infinite alternate;
+}
+
+.subtitulo-animado {
+    text-align: center;
+    font-size: 13px;
+    color: #ccc;
+    animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes brillo {
+    from { color: gold; text-shadow: 0 0 5px gold; }
+    to { color: white; text-shadow: 0 0 15px gold; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* MODAL */
 #modalMoto {
     display:none;
@@ -195,11 +218,13 @@ button:disabled {
 <!-- COTIZADOR -->
 <div class="cotizador">
 
-<h2>COTIZADOR CUOTAS</h2>
-<h6> Recuerda que el cotizador muestra las cuotas a pagar mensualmente con tarjeta de crédito</h6>
+<h2 class="titulo-animado">COTIZADOR CUOTAS</h2>
+<h6 class="subtitulo-animado">
+Recuerda que el cotizador muestra las cuotas a pagar mensualmente con tarjeta de crédito
+</h6>
 
 <input type="text" id="modelo" placeholder="Modelo" readonly>
-<input type="number" id="monto" placeholder="Monto (Q)">
+<input type="text" id="monto" placeholder="Q0.00">
 
 <select id="cuotas">
 <option value="2">2 cuotas</option>
@@ -262,9 +287,8 @@ mini2.onclick=()=>imgPrincipal.src=img2;
 mini3.onclick=()=>imgPrincipal.src=img3;
 
 document.getElementById("modelo").value=nombre;
-document.getElementById("monto").value=precio;
+document.getElementById("monto").value="Q"+precio.toLocaleString("es-GT");
 
-// Reset estado
 document.getElementById("resultado").style.display="none";
 
 if(vendida){
@@ -283,13 +307,14 @@ document.getElementById("modalMoto").style.display="none";
 }
 
 function calcular(){
-let monto=parseFloat(document.getElementById("monto").value);
-let cuotas=parseInt(document.getElementById("cuotas").value);
+let montoStr = document.getElementById("monto").value.replace("Q","").replace(/,/g,"");
+let monto = parseFloat(montoStr);
+let cuotas = parseInt(document.getElementById("cuotas").value);
 
 if(isNaN(monto)){ alert("Ingrese monto"); return; }
 
-let total=monto+(monto*recargos[cuotas]);
-let cuota=total/cuotas;
+let total = monto + (monto * recargos[cuotas]);
+let cuota = total / cuotas;
 
 document.getElementById("resultado").style.display="block";
 
@@ -299,6 +324,19 @@ cuotas+" cuotas de Q"+cuota.toFixed(2);
 document.getElementById("total").innerText =
 "Total: Q"+total.toFixed(2);
 }
+
+const inputMonto = document.getElementById("monto");
+
+inputMonto.addEventListener("input", function(){
+    let valor = this.value.replace(/[^0-9]/g, "");
+    
+    if(valor === ""){
+        this.value = "";
+        return;
+    }
+
+    this.value = "Q" + parseFloat(valor).toLocaleString("es-GT");
+});
 </script>
 
 </body>
