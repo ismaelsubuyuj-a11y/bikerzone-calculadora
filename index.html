@@ -43,6 +43,7 @@ body {
     border-radius:10px;
     cursor:pointer;
     overflow:hidden;
+    position: relative;
 }
 
 .moto img {
@@ -55,6 +56,36 @@ body {
     margin:5px;
     font-size:14px;
     color:gold;
+}
+
+/* OFERTA */
+.moto.oferta::after {
+    content: "OFERTA";
+    position: absolute;
+    top: 10px;
+    right: -15px;
+    background: gold;
+    color: black;
+    padding: 5px 20px;
+    font-weight: bold;
+    transform: rotate(20deg);
+}
+
+/* VENDIDA */
+.moto.vendida {
+    opacity: 0.6;
+}
+
+.moto.vendida::after {
+    content: "VENDIDA";
+    position: absolute;
+    top: 10px;
+    left: -15px;
+    background: red;
+    color: white;
+    padding: 5px 20px;
+    font-weight: bold;
+    transform: rotate(-20deg);
 }
 
 /* COTIZADOR */
@@ -84,6 +115,10 @@ button {
     font-weight:bold;
 }
 
+button:disabled {
+    background:gray;
+}
+
 .cuota {
     font-size:22px;
     color:gold;
@@ -108,12 +143,18 @@ button {
     margin:5px;
     cursor:pointer;
 }
+
+.estado-modal {
+    font-size:22px;
+    font-weight:bold;
+    margin-top:10px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- 🔥 HEADER -->
+<!-- HEADER -->
 <div class="header">
     <img src="logo.png">
     <div class="frase">
@@ -121,32 +162,37 @@ button {
     </div>
 </div>
 
-<!-- 🏍️ CATÁLOGO -->
+<!-- CATÁLOGO -->
 <div class="catalogo">
 
-<div class="moto" onclick="abrirMoto('MT07 2016',48000,'mt1.jpg','mt2.jpg','mt3.jpg')">
+<div class="moto oferta" onclick="abrirMoto('MT07 2016',48000,'mt1.jpg','mt2.jpg','mt3.jpg', false)">
 <img src="mt1.jpg">
 <p>MT07 2016 - Q48,000</p>
 </div>
 
-<div class="moto" onclick="abrirMoto('MT07 2019',54500,'mt4.jpeg','mt5.jpeg','mt6.jpeg')">
+<div class="moto oferta" onclick="abrirMoto('MT07 2019',54500,'mt4.jpeg','mt5.jpeg','mt6.jpeg', false)">
 <img src="mt4.jpeg">
 <p>MT07 2019 - Q54,500</p>
 </div>
 
-<div class="moto" onclick="abrirMoto('Kawasaki EX400 2023',39500,'k1.jpeg','k2.jpeg','k3.jpeg')">
+<div class="moto" onclick="abrirMoto('Kawasaki EX400 2023',39500,'k1.jpeg','k2.jpeg','k3.jpeg', false)">
 <img src="k1.jpeg">
 <p>Kawasaki EX400 2023 - Q39,500</p>
 </div>
 
-<div class="moto" onclick="abrirMoto('Boxer BM150 2026',7949,'b1.jpeg','b2.jpeg','b3.jpeg')">
+<div class="moto" onclick="abrirMoto('Boxer BM150 2026',7949,'b1.jpeg','b2.jpeg','b3.jpeg', false)">
 <img src="b1.jpeg">
 <p>Boxer BM150 2026 - Q7,949</p>
 </div>
 
+<div class="moto vendida" onclick="abrirMoto('Pulsar NS200 UG 2025',18900,'ns1.jpg','ns2.jpg','ns3.jpg', true)">
+<img src="ns1.jpg">
+<p>Pulsar NS200 UG 2025 - Q18,900</p>
 </div>
 
-<!-- 💰 COTIZADOR -->
+</div>
+
+<!-- COTIZADOR -->
 <div class="cotizador">
 
 <h2>COTIZADOR CUOTAS</h2>
@@ -168,7 +214,9 @@ button {
 <option value="48">48 cuotas</option>
 </select>
 
-<button onclick="calcular()">Calcular</button>
+<button id="btnCalcular" onclick="calcular()">Calcular</button>
+
+<div id="estadoMoto" class="estado-modal"></div>
 
 <div id="resultado" style="display:none;">
 <div class="cuota" id="cuota"></div>
@@ -177,7 +225,7 @@ button {
 
 </div>
 
-<!-- 🖼️ MODAL -->
+<!-- MODAL -->
 <div id="modalMoto">
 
 <img id="imgPrincipal" width="90%" style="margin-top:40px;">
@@ -200,7 +248,7 @@ const recargos = {
 15:0.20,18:0.22,24:0.24,36:0.26,48:0.27
 };
 
-function abrirMoto(nombre, precio, img1, img2, img3){
+function abrirMoto(nombre, precio, img1, img2, img3, vendida){
 
 document.getElementById("modalMoto").style.display="block";
 
@@ -215,6 +263,19 @@ mini3.onclick=()=>imgPrincipal.src=img3;
 
 document.getElementById("modelo").value=nombre;
 document.getElementById("monto").value=precio;
+
+// Reset estado
+document.getElementById("resultado").style.display="none";
+
+if(vendida){
+    document.getElementById("estadoMoto").innerText="⚠️ MOTOCICLETA VENDIDA";
+    document.getElementById("estadoMoto").style.color="red";
+    document.getElementById("btnCalcular").disabled=true;
+}else{
+    document.getElementById("estadoMoto").innerText="";
+    document.getElementById("btnCalcular").disabled=false;
+}
+
 }
 
 function cerrarMoto(){
